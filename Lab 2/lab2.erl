@@ -19,4 +19,6 @@ generateLists(N, M) -> [ [X + (M*Y) || Y <- lists:seq(0, N-1)] || X <- lists:seq
 formatLists([]) -> ok; % prints ok instead of an empty list
 formatLists([HeadList | TailLists]) -> io:format("~w~n", [HeadList]), formatLists(TailLists).
 
+
+test() -> 
 % -- Private --
