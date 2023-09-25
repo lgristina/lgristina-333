@@ -19,13 +19,24 @@ public class lab2{
         return lists;
     }
 
+    
     public static void main(String[] args){
-        int length = 6;
-        int spacer = 14;
-
-        List<List<Integer>> lists = generateLists(length, spacer);
+        
+        // Test case for the example on the lab page
+        List<List<Integer>> lists = generateLists(6, 14);
 
         for(List<Integer> list : lists){
+            System.out.println(list);
+        }
+        
+        System.out.println();
+        System.out.println("-----------------------------------------");
+        System.out.println();
+
+        // Another test case with expected values
+        List<List<Integer>> lists2 = generateLists(5, 10);
+
+        for(List<Integer> list : lists2){
             System.out.println(list);
         }
     }

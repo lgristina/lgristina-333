@@ -4,20 +4,9 @@
 % -- Public --
 %
 
--export([generateLists/2, formatLists/1, test/0]).
+-export([main/2, test/0, test2/0]).
 
-
-% Debugged and slightly altared by chatgpt
-% The inner list comprehension generates the N-length sequences spaced by M.
-% The outer list comprehension generates the M lists.
-
-generateLists(Length, Spacer) -> [ [X + (Spacer*Y) || Y <- lists:seq(0, Length-1)] || X <- lists:seq(Spacer, 1, -1) ].
-
-
-% Formats the list to avoid the pattern matching of ascii values in the lists.
-
-formatLists([]) -> ok; % prints ok instead of an empty list
-formatLists([HeadList | TailLists]) -> io:format("~w~n", [HeadList]), formatLists(TailLists).
+main(Length, Spacer) -> formatLists(generateLists(Length, Spacer)).
 
 
 % Added two test cases.
@@ -38,9 +27,11 @@ test() ->
     [3,17,31,45,59,73],
     [2,16,30,44,58,72],
     [1,15,29,43,57,71],
-    ok = lab2:formatLists(lab2:generateLists(6, 14)),
-    
-    [10,20,30,40,50],
+    ok = main(6, 14),
+    "test passed"].
+
+test2() ->
+    [[10,20,30,40,50],
     [9,19,29,39,49],
     [8,18,28,38,48],
     [7,17,27,37,47],
@@ -50,8 +41,20 @@ test() ->
     [3,13,23,33,43],
     [2,12,22,32,42],
     [1,11,21,31,41],
-    ok = lab2:formatLists(lab2:generateLists(5, 10)),
+    ok = main(5,10),
     
-    "All tests are passed"].
+    "test passed"].
 
 % -- Private --
+
+% Debugged and slightly altared by chatgpt
+% The inner list comprehension generates the N-length sequences spaced by M.
+% The outer list comprehension generates the M lists.
+
+generateLists(Length, Spacer) -> [ [X + (Spacer*Y) || Y <- lists:seq(0, Length-1)] || X <- lists:seq(Spacer, 1, -1) ].
+
+
+% Formats the list to avoid the pattern matching of ascii values in the lists.
+
+formatLists([]) -> ok; % prints ok instead of an empty list
+formatLists([HeadList | TailLists]) -> io:format("~w~n", [HeadList]), formatLists(TailLists).
