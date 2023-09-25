@@ -11,7 +11,7 @@
 % The inner list comprehension generates the N-length sequences spaced by M.
 % The outer list comprehension generates the M lists.
 
-generateLists(N, M) -> [ [X + (M*Y) || Y <- lists:seq(0, N-1)] || X <- lists:seq(M, 1, -1) ].
+generateLists(Length, Spacer) -> [ [X + (Spacer*Y) || Y <- lists:seq(0, Length-1)] || X <- lists:seq(Spacer, 1, -1) ].
 
 
 % Formats the list to avoid the pattern matching of ascii values in the lists.
@@ -24,7 +24,7 @@ formatLists([HeadList | TailLists]) -> io:format("~w~n", [HeadList]), formatList
 % First is the example given on the lab sheet, the other uses the values of 5, and 10.
 
 test() -> 
-    [14,28,42,56,70,84],
+    [[14,28,42,56,70,84],
     [13,27,41,55,69,83],
     [12,26,40,54,68,82],
     [11,25,39,53,67,81],
@@ -51,6 +51,7 @@ test() ->
     [2,12,22,32,42],
     [1,11,21,31,41],
     ok = lab2:formatLists(lab2:generateLists(5, 10)),
-    "All tests are passed".
+    
+    "All tests are passed"].
 
 % -- Private --
