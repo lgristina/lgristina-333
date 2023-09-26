@@ -4,16 +4,25 @@
 % -- Public --
 %
 
--export([main/2, test/0, test2/0]).
+-export([main/2, test/0, test2/0, test3/0, test4/0]).
 
-main(Length, Spacer) -> formatLists(generateLists(Length, Spacer)).
+% Checking for positive integers then creating the lists
+main(Length, Spacer) when is_integer(Length), Length >= 0,
+                          is_integer(Spacer), Spacer >= 0 -> 
+    
+    GeneratedLists = generateLists(Length, Spacer), % Creates variable that can be returned
+    formatLists(GeneratedLists), % Formats the list to ignore the ascii value pattern matching
+    GeneratedLists; % Returns the list of lists from the function
+
+% Character and negative number handling
+main(_,_) -> 
+    {error, "Invalid input: Please enter a non-negative integer."}.
 
 
-% Added two test cases.
-% First is the example given on the lab sheet, the other uses the values of 5, and 10.
-
+% The orginal test case from the lab page.
 test() -> 
-    [[14,28,42,56,70,84],
+    ExpectedOutput = [
+    [14,28,42,56,70,84],
     [13,27,41,55,69,83],
     [12,26,40,54,68,82],
     [11,25,39,53,67,81],
@@ -26,12 +35,22 @@ test() ->
     [4,18,32,46,60,74],
     [3,17,31,45,59,73],
     [2,16,30,44,58,72],
-    [1,15,29,43,57,71],
-    ok = main(6, 14),
-    "test passed"].
+    [1,15,29,43,57,71]],
 
+    Result = main(6,14),
+
+    % Better test case format
+    case Result of 
+        ExpectedOutput ->
+            io:format("test passed~n");
+        _ -> 
+            io:format("test failed~n")
+    end.
+
+% Test case with different integer values.
 test2() ->
-    [[10,20,30,40,50],
+    ExpectedOutput = [
+    [10,20,30,40,50],
     [9,19,29,39,49],
     [8,18,28,38,48],
     [7,17,27,37,47],
@@ -40,10 +59,46 @@ test2() ->
     [4,14,24,34,44],
     [3,13,23,33,43],
     [2,12,22,32,42],
-    [1,11,21,31,41],
-    ok = main(5,10),
+    [1,11,21,31,41]],
+
+    Result = main(5,10),
     
-    "test passed"].
+    % Test case output
+    case Result of 
+        ExpectedOutput ->
+            io:format("test passed~n");
+        _ -> 
+            io:format("test failed~n")
+    end.
+
+
+% Test case with a negative integer.
+test3() ->
+    ExpectedOutput = {error, "Invalid input: Please enter a non-negative integer."},
+
+    Result = main(-5,10),
+    
+    % Test case output
+    case Result of 
+        ExpectedOutput ->
+            io:format("test passed~n");
+        _ -> 
+            io:format("test failed~n")
+    end.
+
+% Test case with both a negative integer and a character.
+test4() ->
+    ExpectedOutput = {error, "Invalid input: Please enter a non-negative integer."},
+
+    Result = main(-5,"e"),
+    
+    % Test case output
+    case Result of 
+        ExpectedOutput ->
+            io:format("test passed~n");
+        _ -> 
+            io:format("test failed~n")
+    end.
 
 % -- Private --
 
@@ -55,6 +110,8 @@ generateLists(Length, Spacer) -> [ [X + (Spacer*Y) || Y <- lists:seq(0, Length-1
 
 
 % Formats the list to avoid the pattern matching of ascii values in the lists.
+% Debugged by chatgpt to have it just format the lists instead of returning the list as well.
 
-formatLists([]) -> ok; % prints ok instead of an empty list
-formatLists([HeadList | TailLists]) -> io:format("~w~n", [HeadList]), formatLists(TailLists).
+formatLists([]) -> ok;
+formatLists([HeadList | TailLists]) -> 
+    io:format("~w~n", [HeadList]), formatLists(TailLists).
