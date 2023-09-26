@@ -103,10 +103,11 @@ test4() ->
 % -- Private --
 
 % Debugged and slightly altared by chatgpt
-% The inner list comprehension generates the N-length sequences spaced by M.
-% The outer list comprehension generates the M lists.
+% The inner list comprehension generates the N-length lists spaced by M.
+% The outer list comprehension generates the M amount of lists.
 
-generateLists(Length, Spacer) -> [ [X + (Spacer*Y) || Y <- lists:seq(0, Length-1)] || X <- lists:seq(Spacer, 1, -1) ].
+generateLists(Length, Spacer) -> 
+    [ [ListStartNum + (Spacer * Increment) || Increment <- lists:seq(0, Length-1)] || ListStartNum <- lists:seq(Spacer, 1, -1) ].
 
 
 % Formats the list to avoid the pattern matching of ascii values in the lists.
