@@ -86,6 +86,7 @@ After completing this lab, I found Erlang to be quite powerful in its ability to
 1> c(lab2).
 {ok,lab2}
 2> lab2:test().
+Formatted List: 
 [14,28,42,56,70,84]
 [13,27,41,55,69,83]
 [12,26,40,54,68,82]
@@ -100,9 +101,11 @@ After completing this lab, I found Erlang to be quite powerful in its ability to
 [3,17,31,45,59,73]
 [2,16,30,44,58,72]
 [1,15,29,43,57,71]
+Raw List: 
 test passed
 ok
 3> lab2:test2().
+Formatted List: 
 [10,20,30,40,50]
 [9,19,29,39,49]
 [8,18,28,38,48]
@@ -113,6 +116,7 @@ ok
 [3,13,23,33,43]
 [2,12,22,32,42]
 [1,11,21,31,41]
+Raw List: 
 test passed
 ok
 4> lab2:test3().
@@ -124,7 +128,7 @@ ok
 6> lab2:main(-5,10).
 {error,"Invalid input: 
 Please enter a non-negative integer."}
-7> lab2:main("e",3).
+7> lab2:main("e",5). 
 {error,"Invalid input: 
 Please enter a non-negative integer."}
 
