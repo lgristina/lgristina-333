@@ -11,8 +11,15 @@ main(Length, Spacer) when is_integer(Length), Length >= 0,
                           is_integer(Spacer), Spacer >= 0 -> 
     
     GeneratedLists = generateLists(Length, Spacer), % Creates variable that can be returned
-    formatLists(GeneratedLists), % Formats the list to ignore the ascii value pattern matching
-    GeneratedLists; % Returns the list of lists from the function
+    FormattedLists = formatLists(GeneratedLists),
+    io:format("\nFormatted List: ~n"),
+    io:format("~s", [FormattedLists]),
+    io:format("\nRaw List: ~n"),
+    GeneratedLists;
+
+
+    
+    
 
 % Character and negative number handling
 main(_,_) -> 
@@ -39,13 +46,13 @@ test() ->
 
     Result = main(6,14),
 
-    % Better test case format
     case Result of 
         ExpectedOutput ->
             io:format("test passed~n");
         _ -> 
             io:format("test failed~n")
     end.
+
 
 % Test case with different integer values.
 test2() ->
@@ -62,10 +69,10 @@ test2() ->
     [1,11,21,31,41]],
 
     Result = main(5,10),
-    
-    % Test case output
+
     case Result of 
         ExpectedOutput ->
+            
             io:format("test passed~n");
         _ -> 
             io:format("test failed~n")
@@ -113,6 +120,8 @@ generateLists(Length, Spacer) ->
 % Formats the list to avoid the pattern matching of ascii values in the lists.
 % Debugged by chatgpt to have it just format the lists instead of returning the list as well.
 
-formatLists([]) -> ok;
+formatLists([]) -> [];
 formatLists([HeadList | TailLists]) -> 
-    io:format("~w~n", [HeadList]), formatLists(TailLists).
+    FormattedHeadList = io_lib:format("~w", [HeadList]),
+    FormattedTailLists = formatLists(TailLists),
+    lists:concat([FormattedHeadList, "\n", FormattedTailLists]).
