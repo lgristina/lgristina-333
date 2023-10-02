@@ -18,9 +18,6 @@ main(Length, Spacer) when is_integer(Length), Length >= 0,
     GeneratedLists;
 
 
-    
-    
-
 % Character and negative number handling
 main(_,_) -> 
     {error, "Invalid input: Please enter a non-negative integer."}.
