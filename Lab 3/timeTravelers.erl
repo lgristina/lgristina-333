@@ -1,5 +1,6 @@
 %%%
-%%% woa.erl - World of Alan. It's like World of Warcraft if it were Zork.
+%%% timeTravelers.erl - Time Travelers. Travel through time to gather the code
+%%% needed to unlock the great secrets to the universe or just an OS presentation
 %%%
 
 -module(timeTravelers).
@@ -146,19 +147,58 @@ mapper(Current, _) -> {Current, "You are breaking the rules of time travel."}.
 
 
 %% These location descriptions DO NOT end with ~n newlines. The newline is taken care of up in the display code.
-locations(0) -> "0. 2025~nThis is the present. You have three choices:~nYou can travel 20 or 50 years into the past (past)~nYou can search for a piece of the code (search25)~nYou can try your code (test): ";
-locations(1) -> "1. 2005~nYou are 20 years in the past.~nYou can start your search for the code (search05) or you can travel another 20 yrs into the past (1985): ";
-locations(2) -> "2. 1985~nYou are 40 years in the past~nYou can search for he piece of the code (search85) or you can travel back to the present (2025): ";
-locations(3) -> "3. 1975~nYou are 50 years in the past~nYou can search for he piece of the code (search75) or you can travel 20 yrs in the future (1995): ";
-locations(4) -> "4. 1995~nYou are 30 years in the past~nYou can search for he piece of the code (search95) or you can travel 20 yrs in the future (2015): ";
-locations(5) -> "5. 2015~nYou are 10 years in the past~nYou can search for he piece of the code (search15) or you can travel back to the present (2025): ";
-locations(6) -> "6. 2025~nYou track down the man who knows the last value of the code~nAfter some convincing he whispers \"The last letter to the code is \'a\'\"~nHave you found the entire code? (test) if not, time to head to the past! (past): ";
-locations(7) -> "7. 2005~nYou track down the man who knows the fourth value of the code~nAfter some convincing he whispers \"The last letter to the code is \'a\'\"~nYou must keep looking... head futher into the past (1985): ";
-locations(8) -> "8. 1985~nYou track down the man who knows the second value of the code~nAfter some convincing he whispers \"The last letter to the code is \'l\'\"~nYou must keep looking... head to the present and take another route (2025): ";
-locations(9) -> "9. 1975~nYou track down the man who knows the first value of the code~nAfter some convincing he whispers \"The last letter to the code is \'a\'\"~nYou must keep looking... start heading toward the present (1995): ";
-locations(10) -> "10. 1995~nYou track down the man who knows the third value of the code~nAfter some convincing he whispers \"The last letter to the code is \'p\'\"~n You must keep looking... start heading toward the present (2015): ";
-locations(11) -> "11. 2015~nYou track down the man who knows the fifth value of the code~nAfter some convincing he whispers \"The last letter to the code is \'c\'\"~nYou must keep looking... head to the present to take another route or test your code (2025): ";
-locations(12) -> "12. 2025~nYou go the monitor and it reads~n\"Please enter the code: \" ";
+locations(0) -> "0. 2025~nThis is the present. You have three choices:
+                        ~nYou can travel 20 or 50 years into the past (past)
+                        ~nYou can search for a piece of the code (search25)
+                        ~nYou can try your code (test): ";
+
+locations(1) -> "1. 2005~nYou are 20 years in the past. You have two choices: 
+                        ~nYou can start your search for the code (search05)
+                        ~nYou can travel another 20 yrs into the past (1985): ";
+
+locations(2) -> "2. 1985~nYou are 40 years in the past. You have two choices: 
+                        ~nYou can search for he piece of the code (search85)
+                        ~nYou can travel back to the present (2025): ";
+
+locations(3) -> "3. 1975~nYou are 50 years in the past. You have two choices: 
+                        ~nYou can search for he piece of the code (search75)
+                        ~nYou can travel 20 yrs in the future (1995): ";
+
+locations(4) -> "4. 1995~nYou are 30 years in the past. You have two choices: 
+                        ~nYou can search for he piece of the code (search95)
+                        ~nYou can travel 20 yrs in the future (2015): ";
+
+locations(5) -> "5. 2015~nYou are 10 years in the past. You have two choices: 
+                        ~nYou can search for he piece of the code (search15)
+                        ~nYou can travel back to the present (2025): ";
+
+locations(6) -> "6. 2025~nYou track down the man who knows the last value of the code
+                        ~nAfter some convincing he whispers... \"The last letter to the code is \'a\'\"
+                        ~nHave you found the entire code? (test) if not, time to head to the past! (past): ";
+
+locations(7) -> "7. 2005~nYou track down the man who knows the fourth value of the code
+                        ~nAfter some convincing he whispers... \"The last letter to the code is \'a\'\"
+                        ~nYou must keep looking... head futher into the past (1985): ";
+
+locations(8) -> "8. 1985~nYou track down the man who knows the second value of the code
+                        ~nAfter some convincing he whispers... \"The last letter to the code is \'l\'\"
+                        ~nYou must keep looking... head to the present and take another route (2025): ";
+
+locations(9) -> "9. 1975~nYou track down the man who knows the first value of the code
+                        ~nAfter some convincing he whispers... \"The last letter to the code is \'a\'\"
+                        ~nYou must keep looking... start heading toward the present (1995): ";
+
+locations(10) -> "10. 1995~nYou track down the man who knows the third value of the code
+                          ~nAfter some convincing he whispers... \"The last letter to the code is \'p\'\"
+                          ~n You must keep looking... start heading toward the present (2015): ";
+
+locations(11) -> "11. 2015~nYou track down the man who knows the fifth value of the code
+                          ~nAfter some convincing he whispers... \"The last letter to the code is \'c\'\"
+                          ~nYou must keep looking... head to the present to take another route or test your code (2025): ";
+
+locations(12) -> "12. 2025~nYou go the monitor and it reads
+                          ~n\"Please enter the code: \" ";
+
 locations(13) -> "13. Congratulations you are now able to access Alans presentations on his website";
 locations(14) -> "14. Do you want to travel to 20 years (20) or 50 years (50) into the past?".
 
