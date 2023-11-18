@@ -3,7 +3,7 @@
 %
 -module(tttClient).
 -author('Alan G. Labouseur').
--author('Luca Gristina')
+-author('Luca Gristina').
 
 -define(else, true).
 -define(id, "-- client: ").
