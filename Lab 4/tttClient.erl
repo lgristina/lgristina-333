@@ -52,6 +52,31 @@ clientLoop() -> receive
                       {tttServer, FromNode} ! {node(), process_player_turn, Board, hd(PlayerMove)},
                       clientLoop();
 
+                   {FromNode, computer_turn, Board} ->
+                      io:fwrite("~sReceived [computer_turn] request from node ~w with board ~p.~n",[?id, FromNode, Board]),
+                      io:fwrite("~s", [?id]),
+                      {tttServer, FromNode} ! {node(), computer_turn, Board},
+                      displayBoard(Board),
+                      clientLoop();
+
+                   {FromNode, player_win, Board} ->
+                      io:fwrite("~sReceived [player_win] request from node ~w with board ~p.~n",[?id, FromNode, Board]),
+                      displayBoard(Board),
+                      io:fwrite("~sYou won!~n", [?id]),
+                      clientLoop();
+
+                   {FromNode, computer_win, Board} ->
+                      io:fwrite("~sReceived [computer_win] request from node ~w with board ~p.~n",[?id, FromNode, Board]),
+                      displayBoard(Board),
+                      io:fwrite("~sI won!~n", [?id]),
+                      clientLoop();
+
+                   {FromNode, computer_tie, Board} ->
+                      io:fwrite("~sReceived [computer_tie] request from node ~w with board ~p.~n",[?id, FromNode, Board]),
+                      displayBoard(Board),
+                      io:fwrite("~sIt's a tie!~n", [?id]),
+                      clientLoop();
+
                    {FromNode, _Any}  ->
                       io:fwrite("~sReceived unknown request [~p] from node ~w.~n",[?id, _Any, FromNode]),
                       clientLoop()
@@ -61,4 +86,16 @@ clientLoop() -> receive
 %
 % Private; no messages either.
 %
-displayBoard(Board) -> io:fwrite("Board: ~p~n", [Board]).
+displayBoard(Board) ->
+    Symbols = lists:map(fun convertToSymbol/1, Board),
+    Rows = [lists:sublist(Symbols, 1, 3),
+            lists:sublist(Symbols, 4, 3),
+            lists:sublist(Symbols, 7, 3)],
+    lists:foreach(fun(Row) ->
+                      io:fwrite("  ~s | ~s | ~s~n", Row),
+                      io:fwrite(" -----------~n", [])
+                  end, Rows).
+
+convertToSymbol(0) -> " ";
+convertToSymbol(1) -> "X";
+convertToSymbol(-1) -> "O".

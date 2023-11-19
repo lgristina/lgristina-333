@@ -40,13 +40,14 @@ serverLoop() ->
          io:fwrite("~sReceived [start_game] request from node ~w.~n",[?id, FromNode]),
          io:fwrite("~sSending [player_turn] response to node ~w.~n",[?id, FromNode]),
          InitialBoard = [0,0,0, 0,0,0, 0,0,0],
-         {tttClient, FromNode} ! {node(), player_turn, InitialBoard},
+         NewBoard = computerTurn(InitialBoard),
+         {tttClient, FromNode} ! {node(), player_turn, NewBoard},
          serverLoop();
 
       {FromNode, process_player_turn, Board, PlayerPos} ->
          io:fwrite("~sReceived [process_player_turn] request from node ~w with board ~w and player move ~w.~n",[?id, FromNode, Board, PlayerPos]),
          NewBoard = processPlayerMove(PlayerPos, Board),
-         case checkWin(NewBoard, 1) of
+         case checkWin(NewBoard, -1) of
             true ->
                {tttClient, FromNode} ! {node(), player_win, NewBoard};
             false ->
@@ -57,12 +58,22 @@ serverLoop() ->
       {FromNode, computer_turn, Board} ->
          io:fwrite("~sReceived [computer_turn] request from node ~w with board ~p.~n",[?id, FromNode, Board]),
          NewBoard = computerTurn(Board),
-         case checkWin(NewBoard, 2) of
+         Win = checkWin(NewBoard, 1),
+         EmptySpaces = [Position || Position <- lists:seq(1, 9), lists:nth(Position, NewBoard) =:= 0],
+         case Win of
             true ->
+               io:fwrite("~sSending [computer_win] message to node ~w.~n", [?id, FromNode]),
                {tttClient, FromNode} ! {node(), computer_win, NewBoard};
             false ->
-               {tttClient, FromNode} ! {node(), player_turn, NewBoard},
-               serverLoop()
+               case EmptySpaces of
+                  [] ->
+                     io:fwrite("~sSending [computer_tie] message to node ~w.~n", [?id, FromNode]),
+                     {tttClient, FromNode} ! {node(), computer_tie, NewBoard};
+                  _ ->
+                     io:fwrite("~sSending [player_turn] message to node ~w.~n", [?id, FromNode]),
+                     {tttClient, FromNode} ! {node(), player_turn, NewBoard},
+                     serverLoop()
+               end
          end;
 
       {FromNode, _Any} ->
@@ -78,7 +89,7 @@ processPlayerMove(Position, Board) ->
    Target = lists:nth(Position, Board),
    if(Target == 0) ->
       io:fwrite("~sPlacing an X into position ~w.~n", [?id, Position]),
-      UpdatedBoard = replaceInList(1, Position, Board),
+      UpdatedBoard = replaceInList(-1, Position, Board),
       UpdatedBoard;
    ?else ->
       io:fwrite("~sCannot place an X into position ~w.~n", [?id, Position]),
@@ -93,8 +104,10 @@ replaceInList(Value, Position, List) ->
 
 
 checkWin(Board, Player) ->
-    Rows = lists:chunk(3, Board),
-    Columns = [lists:nth(Index, Board) || Index <- [1, 2, 3]],
+    Rows = [lists:sublist(Board, 1, 3),
+            lists:sublist(Board, 4, 3),
+            lists:sublist(Board, 7, 3)],
+    Columns = [[lists:nth(1 + X, Board), lists:nth(4 + X, Board), lists:nth(7 + X, Board)] || X <- [0, 1, 2]],
     Diagonals = [[lists:nth(1, Board), lists:nth(5, Board), lists:nth(9, Board)],
                  [lists:nth(3, Board), lists:nth(5, Board), lists:nth(7, Board)]],
     checkLines(Rows, Player) orelse
@@ -108,42 +121,45 @@ checkLines(Lines, Player) ->
                         Mark == Player end, Line)
               end, Lines).
 
+pick_random_element(List) ->
+    case List of
+        [] -> 
+            none;
+        _ ->       
+            Index = rand:uniform(length(List)),
+            lists:nth(Index, List)
+    end.
+
+
 
 computerTurn(Board) ->
    WinPatterns = [{1,2,3}, {4,5,6}, {7,8,9}, {1,4,7}, {2,5,8}, {3,6,9}, {1,5,9}, {3,5,7}],
-   EmptySpaces = lists:foldl(fun(Element, {Index, Acc}) ->
-                                 case Element of
-                                    0 -> [Index | Acc];
-                                    -1 -> Acc;
-                                    1 -> Acc
-                                 end
-                              end, {1, []}, Board),       
+   EmptySpaces = [Position || Position <- lists:seq(1, 9), lists:nth(Position, Board) == 0],       
    case length(EmptySpaces) of
       9 ->
          % Pick the bottom left corner (or any corner)
-         UpdatedBoard = replaceInList(1, 1, Board),
+         UpdatedBoard = replaceInList(1, 7, Board),
          UpdatedBoard;
 
       7 ->
          % Play the center if it is available
          Target = lists:nth(5, Board),
-         if
-            Target =:= 0 ->
-               io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
-               UpdatedBoard = replaceInList(1, Target, Board),
-               UpdatedBoard;
-            true ->
-               % List of corners that neighbor the bottom left
-               NeighboringCorners = [3, 7],
+         if(Target =:= 0) ->
+            io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
+            UpdatedBoard = replaceInList(1, 5, Board),
+            UpdatedBoard;
+         ?else ->
+            % List of corners that neighbor the bottom left
+            Corners = [1, 3, 7, 9],
                
-               % Checks if either corner was taken
-               RemainingCorners = [Corner || Corner <- NeighboringCorners, lists:nth(Corner, Board) == 0],
-            
-               % Randomly chooses one of the 2 other corners to play
-               Target = lists:nth(rand:uniform(length(RemainingCorners)), RemainingCorners),
-               io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
-               UpdatedBoard = replaceInList(1, Target, Board),
-               UpdatedBoard
+            % Checks if either corner was taken
+            RemainingCorners = [Corner || Corner <- Corners, lists:nth(Corner, Board) == 0],
+         
+            % Randomly chooses one of the 2 other corners to play
+            Target = pick_random_element(RemainingCorners),
+            io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
+            UpdatedBoard = replaceInList(1, Target, Board),
+            UpdatedBoard
          end;
 
                
@@ -166,17 +182,22 @@ computerTurn(Board) ->
 
          case WinningMove of
             [FirstWinningMove|_] -> 
-                  FirstWinningMove;
+                  io:fwrite("~sPlacing an O into position ~w.~n", [?id, FirstWinningMove]),
+                  UpdatedBoard = replaceInList(1, FirstWinningMove, Board),
+                  UpdatedBoard;
             [] -> 
                   case RemainingCorners of
                      [] -> 
                         case BlockingMove of
                               [FirstBlockingMove|_] -> 
-                                 FirstBlockingMove
+                                 UpdatedBoard = replaceInList(1, FirstBlockingMove, Board),
+                                 UpdatedBoard
                         end;
-                     _ -> 
-                        CornerMove = lists:nth(rand:uniform(length(RemainingCorners)), RemainingCorners),
-                        CornerMove
+                     _ ->                                   
+                        Target = pick_random_element(RemainingCorners),
+                        io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
+                        UpdatedBoard = replaceInList(1, Target, Board),
+                        UpdatedBoard
                   end
          end;
 
@@ -194,8 +215,22 @@ computerTurn(Board) ->
                         end
                      end, [], WinPatterns),
          case WinningMove of
-            -1 -> BlockingMove;
-            _ -> WinningMove
+            [] -> 
+               case BlockingMove of
+                  [] ->
+                     RandomMove = pick_random_element(EmptySpaces),
+                     io:fwrite("~sPlacing an O into position ~w.~n", [?id, RandomMove]),
+                     UpdatedBoard = replaceInList(1, RandomMove, Board),
+                     UpdatedBoard;
+                  [FirstBlockingMove|_] -> 
+                     io:fwrite("~sPlacing an O into position ~w.~n", [?id, FirstBlockingMove]),
+                     UpdatedBoard = replaceInList(1, FirstBlockingMove, Board),
+                     UpdatedBoard
+               end;
+            [FirstWinningMove|_] ->
+               io:fwrite("~sPlacing an O into position ~w.~n", [?id, FirstWinningMove]),
+               UpdatedBoard = replaceInList(1, FirstWinningMove, Board),
+               UpdatedBoard
          end
    end.
 
