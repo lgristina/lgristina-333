@@ -115,11 +115,13 @@ checkWin(Board, Player) ->
     checkLines(Diagonals, Player).
 
 
+
 checkLines(Lines, Player) ->
     lists:any(fun(Line) -> 
               lists:all(fun(Mark) -> 
                         Mark == Player end, Line)
               end, Lines).
+
 
 pick_random_element(List) ->
     case List of
@@ -127,10 +129,9 @@ pick_random_element(List) ->
             none;
         _ ->       
             Index = rand:uniform(length(List)),
-            lists:nth(Index, List)
+            Elem = lists:nth(Index, List),
+            Elem
     end.
-
-
 
 computerTurn(Board) ->
    WinPatterns = [{1,2,3}, {4,5,6}, {7,8,9}, {1,4,7}, {2,5,8}, {3,6,9}, {1,5,9}, {3,5,7}],
@@ -141,25 +142,30 @@ computerTurn(Board) ->
          UpdatedBoard = replaceInList(1, 7, Board),
          UpdatedBoard;
 
+
+         %
+         %  NEED TO FIX THIS
+         %
       7 ->
          % Play the center if it is available
          Target = lists:nth(5, Board),
-         if(Target =:= 0) ->
-            io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
-            UpdatedBoard = replaceInList(1, 5, Board),
-            UpdatedBoard;
-         ?else ->
-            % List of corners that neighbor the bottom left
-            Corners = [1, 3, 7, 9],
-               
-            % Checks if either corner was taken
-            RemainingCorners = [Corner || Corner <- Corners, lists:nth(Corner, Board) == 0],
-         
-            % Randomly chooses one of the 2 other corners to play
-            Target = pick_random_element(RemainingCorners),
-            io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
-            UpdatedBoard = replaceInList(1, Target, Board),
-            UpdatedBoard
+         case Target of
+            0 ->
+               io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
+               UpdatedBoard = replaceInList(1, 5, Board),
+               UpdatedBoard;
+            _ ->
+               % List of corners that neighbor the bottom left
+               Corners = [1, 3, 7, 9],
+                  
+               % Checks if either corner was taken
+               RemainingCorners = [Corner || Corner <- Corners, lists:nth(Corner, Board) == 0],
+
+               % Randomly chooses one of the other corners to play
+               Corner = pick_random_element(RemainingCorners),
+               %io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
+               UpdatedBoard = replaceInList(1, Corner, Board),
+               UpdatedBoard
          end;
 
                
@@ -249,7 +255,3 @@ computeMove(Board, {Pos1, Pos2, Pos3}, Player) ->
       {2, 1} -> hd(EmptyPositions);
       _ -> -1
     end.
-
-
-
-
