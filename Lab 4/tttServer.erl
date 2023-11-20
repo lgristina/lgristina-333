@@ -49,7 +49,8 @@ serverLoop() ->
          NewBoard = processPlayerMove(PlayerPos, Board),
          case checkWin(NewBoard, -1) of
             true ->
-               {tttClient, FromNode} ! {node(), player_win, NewBoard};
+               {tttClient, FromNode} ! {node(), player_win, NewBoard},
+               serverLoop();
             false ->
                {tttClient, FromNode} ! {node(), computer_turn, NewBoard},
                serverLoop()
@@ -63,12 +64,14 @@ serverLoop() ->
          case Win of
             true ->
                io:fwrite("~sSending [computer_win] message to node ~w.~n", [?id, FromNode]),
-               {tttClient, FromNode} ! {node(), computer_win, NewBoard};
+               {tttClient, FromNode} ! {node(), computer_win, NewBoard},
+               serverLoop();
             false ->
                case EmptySpaces of
                   [] ->
                      io:fwrite("~sSending [computer_tie] message to node ~w.~n", [?id, FromNode]),
-                     {tttClient, FromNode} ! {node(), computer_tie, NewBoard};
+                     {tttClient, FromNode} ! {node(), computer_tie, NewBoard},
+                     serverLoop();
                   _ ->
                      io:fwrite("~sSending [player_turn] message to node ~w.~n", [?id, FromNode]),
                      {tttClient, FromNode} ! {node(), player_turn, NewBoard},
@@ -104,9 +107,9 @@ replaceInList(Value, Position, List) ->
 
 
 checkWin(Board, Player) ->
-    Rows = [lists:sublist(Board, 1, 3),
+    Rows = [lists:sublist(Board, 7, 3),
             lists:sublist(Board, 4, 3),
-            lists:sublist(Board, 7, 3)],
+            lists:sublist(Board, 1, 3)],
     Columns = [[lists:nth(1 + X, Board), lists:nth(4 + X, Board), lists:nth(7 + X, Board)] || X <- [0, 1, 2]],
     Diagonals = [[lists:nth(1, Board), lists:nth(5, Board), lists:nth(9, Board)],
                  [lists:nth(3, Board), lists:nth(5, Board), lists:nth(7, Board)]],
@@ -139,13 +142,9 @@ computerTurn(Board) ->
    case length(EmptySpaces) of
       9 ->
          % Pick the bottom left corner (or any corner)
-         UpdatedBoard = replaceInList(1, 7, Board),
+         UpdatedBoard = replaceInList(1, 1, Board),
          UpdatedBoard;
 
-
-         %
-         %  NEED TO FIX THIS
-         %
       7 ->
          % Play the center if it is available
          Target = lists:nth(5, Board),
@@ -155,15 +154,11 @@ computerTurn(Board) ->
                UpdatedBoard = replaceInList(1, 5, Board),
                UpdatedBoard;
             _ ->
-               % List of corners that neighbor the bottom left
-               Corners = [1, 3, 7, 9],
-                  
-               % Checks if either corner was taken
-               RemainingCorners = [Corner || Corner <- Corners, lists:nth(Corner, Board) == 0],
-
                % Randomly chooses one of the other corners to play
+               Corners = [1, 3, 7, 9],
+               RemainingCorners = [Corner || Corner <- Corners, lists:nth(Corner, Board) == 0],
                Corner = pick_random_element(RemainingCorners),
-               %io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
+               io:fwrite("~sPlacing an O into position ~w.~n", [?id, Target]),
                UpdatedBoard = replaceInList(1, Corner, Board),
                UpdatedBoard
          end;

@@ -63,19 +63,46 @@ clientLoop() -> receive
                       io:fwrite("~sReceived [player_win] request from node ~w with board ~p.~n",[?id, FromNode, Board]),
                       displayBoard(Board),
                       io:fwrite("~sYou won!~n", [?id]),
-                      clientLoop();
+                      Play = playAgain(),
+                      case Play of
+                         true ->
+                            {tttServer, FromNode} ! {node(), start_game},
+                            clientLoop();
+                         false ->
+                            io:fwrite("~s", [?id]),
+                            io:fwrite("Thanks for playing.~n", []),
+                            clientLoop()
+                      end;
 
                    {FromNode, computer_win, Board} ->
                       io:fwrite("~sReceived [computer_win] request from node ~w with board ~p.~n",[?id, FromNode, Board]),
                       displayBoard(Board),
                       io:fwrite("~sI won!~n", [?id]),
-                      clientLoop();
+                      Play = playAgain(),
+                      case Play of
+                         true ->
+                            {tttServer, FromNode} ! {node(), start_game},
+                            clientLoop();
+                         false ->
+                            io:fwrite("~s", [?id]),
+                            io:fwrite("Thanks for playing.~n", []),
+                            clientLoop()
+                      end;
 
                    {FromNode, computer_tie, Board} ->
                       io:fwrite("~sReceived [computer_tie] request from node ~w with board ~p.~n",[?id, FromNode, Board]),
                       displayBoard(Board),
                       io:fwrite("~sIt's a tie!~n", [?id]),
-                      clientLoop();
+                      Play = playAgain(),
+                      case Play of
+                         true ->
+                            {tttServer, FromNode} ! {node(), start_game},
+                            clientLoop();
+                         false ->
+                            io:fwrite("~s", [?id]),
+                            io:fwrite("Thanks for playing.~n", []),
+                            clientLoop()
+                      end;
 
                    {FromNode, _Any}  ->
                       io:fwrite("~sReceived unknown request [~p] from node ~w.~n",[?id, _Any, FromNode]),
@@ -88,9 +115,9 @@ clientLoop() -> receive
 %
 displayBoard(Board) ->
     Symbols = lists:map(fun convertToSymbol/1, Board),
-    Rows = [lists:sublist(Symbols, 1, 3),
+    Rows = [lists:sublist(Symbols, 7, 3),
             lists:sublist(Symbols, 4, 3),
-            lists:sublist(Symbols, 7, 3)],
+            lists:sublist(Symbols, 1, 3)],
     lists:foreach(fun(Row) ->
                       io:fwrite("  ~s | ~s | ~s~n", Row),
                       io:fwrite(" -----------~n", [])
@@ -99,3 +126,9 @@ displayBoard(Board) ->
 convertToSymbol(0) -> " ";
 convertToSymbol(1) -> "X";
 convertToSymbol(-1) -> "O".
+
+playAgain() ->
+    io:fwrite("Would you like to play again? [y/n] ", []),
+    {ok, Answer} = io:fread("", "~s"),
+    NormalizedAnswer = string:lowercase(string:trim(Answer)),
+    NormalizedAnswer == "y".
