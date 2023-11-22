@@ -45,15 +45,27 @@ serverLoop() ->
          serverLoop();
 
       {FromNode, process_player_turn, Board, PlayerPos} ->
-         io:fwrite("~sReceived [process_player_turn] request from node ~w with board ~w and player move ~w.~n",[?id, FromNode, Board, PlayerPos]),
-         NewBoard = processPlayerMove(PlayerPos, Board),
-         case checkWin(NewBoard, -1) of
-            true ->
-               {tttClient, FromNode} ! {node(), player_win, NewBoard},
+         if(PlayerPos < 1 orelse PlayerPos > 9) ->
+            io:fwrite("~sInvalid player position - choose an integer between 1 and 9.~n", [?id]),
+            {tttClient, FromNode} ! {node(), player_turn, Board},
+            serverLoop();
+         ?else ->
+            io:fwrite("~sReceived [process_player_turn] request from node ~w with board ~w and player move ~w.~n",[?id, FromNode, Board, PlayerPos]),
+            NewBoard = processPlayerMove(PlayerPos, Board),
+            if(NewBoard == Board) ->
+               io:fwrite("~sInvalid player position - choose an integer between 1 and 9.~n", [?id]),
+               {tttClient, FromNode} ! {node(), player_turn, Board},
                serverLoop();
-            false ->
-               {tttClient, FromNode} ! {node(), computer_turn, NewBoard},
-               serverLoop()
+            ?else ->
+               case checkWin(NewBoard, -1) of
+                  true ->
+                     {tttClient, FromNode} ! {node(), player_win, NewBoard},
+                     serverLoop();
+                  false ->
+                     {tttClient, FromNode} ! {node(), computer_turn, NewBoard},
+                     serverLoop()
+               end
+            end
          end;
 
       {FromNode, computer_turn, Board} ->
@@ -89,15 +101,16 @@ serverLoop() ->
 % Private (not even accepting messages)
 %
 processPlayerMove(Position, Board) ->
-   Target = lists:nth(Position, Board),
-   if(Target == 0) ->
-      io:fwrite("~sPlacing an X into position ~w.~n", [?id, Position]),
-      UpdatedBoard = replaceInList(-1, Position, Board),
-      UpdatedBoard;
-   ?else ->
-      io:fwrite("~sCannot place an X into position ~w.~n", [?id, Position]),
-      Board
-   end.
+      Target = lists:nth(Position, Board),
+      case Target of
+         0 -> 
+            io:fwrite("~sPlacing an X into position ~w.~n", [?id, Position]),
+            UpdatedBoard = replaceInList(-1, Position, Board),
+            UpdatedBoard;
+         _ ->
+            io:fwrite("~sCannot place an X into position ~w.~n", [?id, Position]),
+            Board
+      end.
 
 
 replaceInList(Value, Position, List) ->

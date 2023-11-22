@@ -1,0 +1,469 @@
+Client Side:
+
+(Craig@LucaMacPro)4> c(tttClient).
+{ok,tttClient}
+(Craig@LucaMacPro)5> tttClient:start().
+-- client: TTT client started on node 'Craig@LucaMacPro' (pid <0.91.0>) with pid <0.111.0> registered as tttClient.
+ok
+(Craig@LucaMacPro)6> tttClient:play('Pamela@LucaMacPro').
+-- client: Sending [start_game] request to node 'Pamela@LucaMacPro'.
+{'Craig@LucaMacPro',start_game}
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0].
+    |   |  
+ -----------
+    |   |  
+ -----------
+  X |   |  
+ -----------
+-- client: Where do you want to move [1-9]? 0
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,0,0,0,0,0,0,0,0] and player move 0.
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0].
+    |   |  
+ -----------
+    |   |  
+ -----------
+  X |   |  
+ -----------
+-- client: Where do you want to move [1-9]? 11
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,0,0,0,0,0,0,0,0] and player move 11.
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0].
+    |   |  
+ -----------
+    |   |  
+ -----------
+  X |   |  
+ -----------
+-- client: Where do you want to move [1-9]? 5
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,0,0,0,0,0,0,0,0] and player move 5.
+-- client: Received [computer_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0,
+                                                                                      -1,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0].
+-- client:     |   |  
+ -----------
+    | O |  
+ -----------
+  X |   |  
+ -----------
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    0,
+                                                                                    1,
+                                                                                    0,
+                                                                                    -1,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0].
+    |   |  
+ -----------
+    | O |  
+ -----------
+  X |   | X
+ -----------
+-- client: Where do you want to move [1-9]? 5
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,0,1,0,-1,0,0,0,0] and player move 5.
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    0,
+                                                                                    1,
+                                                                                    0,
+                                                                                    -1,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0].
+    |   |  
+ -----------
+    | O |  
+ -----------
+  X |   | X
+ -----------
+-- client: Where do you want to move [1-9]? 2
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,0,1,0,-1,0,0,0,0] and player move 2.
+-- client: Received [computer_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                      -1,
+                                                                                      1,
+                                                                                      0,
+                                                                                      -1,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0].
+-- client:     |   |  
+ -----------
+    | O |  
+ -----------
+  X | O | X
+ -----------
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    -1,
+                                                                                    1,
+                                                                                    0,
+                                                                                    -1,
+                                                                                    0,
+                                                                                    0,
+                                                                                    1,
+                                                                                    0].
+    | X |  
+ -----------
+    | O |  
+ -----------
+  X | O | X
+ -----------
+-- client: Where do you want to move [1-9]? 4
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,-1,1,0,-1,0,0,1,0] and player move 4.
+-- client: Received [computer_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                      -1,
+                                                                                      1,
+                                                                                      -1,
+                                                                                      -1,
+                                                                                      0,
+                                                                                      0,
+                                                                                      1,
+                                                                                      0].
+-- client:     | X |  
+ -----------
+  O | O |  
+ -----------
+  X | O | X
+ -----------
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    -1,
+                                                                                    1,
+                                                                                    -1,
+                                                                                    -1,
+                                                                                    1,
+                                                                                    0,
+                                                                                    1,
+                                                                                    0].
+    | X |  
+ -----------
+  O | O | X
+ -----------
+  X | O | X
+ -----------
+-- client: Where do you want to move [1-9]? 9
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,-1,1,-1,-1,1,0,1,0] and player move 9.
+-- client: Received [computer_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                      -1,
+                                                                                      1,
+                                                                                      -1,
+                                                                                      -1,
+                                                                                      1,
+                                                                                      0,
+                                                                                      1,
+                                                                                      -1].
+-- client:     | X | O
+ -----------
+  O | O | X
+ -----------
+  X | O | X
+ -----------
+-- client: Received [computer_tie] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                     -1,
+                                                                                     1,
+                                                                                     -1,
+                                                                                     -1,
+                                                                                     1,
+                                                                                     1,
+                                                                                     1,
+                                                                                     -1].
+  X | X | O
+ -----------
+  O | O | X
+ -----------
+  X | O | X
+ -----------
+-- client: It's a tie!
+Would you like to play again? [y/n] y
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0].
+    |   |  
+ -----------
+    |   |  
+ -----------
+  X |   |  
+ -----------
+-- client: Where do you want to move [1-9]? 3
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,0,0,0,0,0,0,0,0] and player move 3.
+-- client: Received [computer_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                      0,
+                                                                                      -1,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0].
+-- client:     |   |  
+ -----------
+    |   |  
+ -----------
+  X |   | O
+ -----------
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    0,
+                                                                                    -1,
+                                                                                    0,
+                                                                                    1,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0,
+                                                                                    0].
+    |   |  
+ -----------
+    | X |  
+ -----------
+  X |   | O
+ -----------
+-- client: Where do you want to move [1-9]? 9
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,0,-1,0,1,0,0,0,0] and player move 9.
+-- client: Received [computer_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                      0,
+                                                                                      -1,
+                                                                                      0,
+                                                                                      1,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0,
+                                                                                      -1].
+-- client:     |   | O
+ -----------
+    | X |  
+ -----------
+  X |   | O
+ -----------
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    0,
+                                                                                    -1,
+                                                                                    0,
+                                                                                    1,
+                                                                                    1,
+                                                                                    0,
+                                                                                    0,
+                                                                                    -1].
+    |   | O
+ -----------
+    | X | X
+ -----------
+  X |   | O
+ -----------
+-- client: Where do you want to move [1-9]? 4
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,0,-1,0,1,1,0,0,-1] and player move 4.
+-- client: Received [computer_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                      0,
+                                                                                      -1,
+                                                                                      -1,
+                                                                                      1,
+                                                                                      1,
+                                                                                      0,
+                                                                                      0,
+                                                                                      -1].
+-- client:     |   | O
+ -----------
+  O | X | X
+ -----------
+  X |   | O
+ -----------
+-- client: Received [player_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                    0,
+                                                                                    -1,
+                                                                                    -1,
+                                                                                    1,
+                                                                                    1,
+                                                                                    0,
+                                                                                    1,
+                                                                                    -1].
+    | X | O
+ -----------
+  O | X | X
+ -----------
+  X |   | O
+ -----------
+-- client: Where do you want to move [1-9]? 2
+-- client: Sending [process_player_turn] response to node 'Pamela@LucaMacPro' with board [1,0,-1,-1,1,1,0,1,-1] and player move 2.
+-- client: Received [computer_turn] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                      -1,
+                                                                                      -1,
+                                                                                      -1,
+                                                                                      1,
+                                                                                      1,
+                                                                                      0,
+                                                                                      1,
+                                                                                      -1].
+-- client:     | X | O
+ -----------
+  O | X | X
+ -----------
+  X | O | O
+ -----------
+-- client: Received [computer_tie] request from node 'Pamela@LucaMacPro' with board [1,
+                                                                                     -1,
+                                                                                     -1,
+                                                                                     -1,
+                                                                                     1,
+                                                                                     1,
+                                                                                     1,
+                                                                                     1,
+                                                                                     -1].
+  X | X | O
+ -----------
+  O | X | X
+ -----------
+  X | O | O
+ -----------
+-- client: It's a tie!
+Would you like to play again? [y/n] n
+-- client: Thanks for playing.
+
+
+Server Side:
+
+-- server: Received [start_game] request from node 'Craig@LucaMacPro'.
+-- server: Sending [player_turn] response to node 'Craig@LucaMacPro'.
+-- server: Invalid player position - choose an integer between 1 and 9.
+-- server: Invalid player position - choose an integer between 1 and 9.
+-- server: Received [process_player_turn] request from node 'Craig@LucaMacPro' with board [1,0,0,0,0,0,0,0,0] and player move 5.
+-- server: Placing an X into position 5.
+-- server: Received [computer_turn] request from node 'Craig@LucaMacPro' with board [1,
+                                                                                     0,
+                                                                                     0,
+                                                                                     0,
+                                                                                     -1,
+                                                                                     0,
+                                                                                     0,
+                                                                                     0,
+                                                                                     0].
+-- server: Placing an O into position -1.
+-- server: Sending [player_turn] message to node 'Craig@LucaMacPro'.
+-- server: Received [process_player_turn] request from node 'Craig@LucaMacPro' with board [1,0,1,0,-1,0,0,0,0] and player move 5.
+-- server: Cannot place an X into position 5.
+-- server: Invalid player position - choose an integer between 1 and 9.
+-- server: Received [process_player_turn] request from node 'Craig@LucaMacPro' with board [1,0,1,0,-1,0,0,0,0] and player move 2.
+-- server: Placing an X into position 2.
+-- server: Received [computer_turn] request from node 'Craig@LucaMacPro' with board [1,
+                                                                                     -1,
+                                                                                     1,
+                                                                                     0,
+                                                                                     -1,
+                                                                                     0,
+                                                                                     0,
+                                                                                     0,
+                                                                                     0].
+-- server: Placing an O into position 8.
+-- server: Sending [player_turn] message to node 'Craig@LucaMacPro'.
+-- server: Received [process_player_turn] request from node 'Craig@LucaMacPro' with board [1,-1,1,0,-1,0,0,1,0] and player move 4.
+-- server: Placing an X into position 4.
+-- server: Received [computer_turn] request from node 'Craig@LucaMacPro' with board [1,
+                                                                                     -1,
+                                                                                     1,
+                                                                                     -1,
+                                                                                     -1,
+                                                                                     0,
+                                                                                     0,
+                                                                                     1,
+                                                                                     0].
+-- server: Placing an O into position 6.
+-- server: Sending [player_turn] message to node 'Craig@LucaMacPro'.
+-- server: Received [process_player_turn] request from node 'Craig@LucaMacPro' with board [1,-1,1,-1,-1,1,0,1,0] and player move 9.
+-- server: Placing an X into position 9.
+-- server: Received [computer_turn] request from node 'Craig@LucaMacPro' with board [1,
+                                                                                     -1,
+                                                                                     1,
+                                                                                     -1,
+                                                                                     -1,
+                                                                                     1,
+                                                                                     0,
+                                                                                     1,
+                                                                                     -1].
+-- server: Placing an O into position 7.
+-- server: Sending [computer_tie] message to node 'Craig@LucaMacPro'.
+-- server: Received [start_game] request from node 'Craig@LucaMacPro'.
+-- server: Sending [player_turn] response to node 'Craig@LucaMacPro'.
+-- server: Received [process_player_turn] request from node 'Craig@LucaMacPro' with board [1,0,0,0,0,0,0,0,0] and player move 3.
+-- server: Placing an X into position 3.
+-- server: Received [computer_turn] request from node 'Craig@LucaMacPro' with board [1,
+                                                                                     0,
+                                                                                     -1,
+                                                                                     0,
+                                                                                     0,
+                                                                                     0,
+                                                                                     0,
+                                                                                     0,
+                                                                                     0].
+-- server: Placing an O into position 0.
+-- server: Sending [player_turn] message to node 'Craig@LucaMacPro'.
+-- server: Received [process_player_turn] request from node 'Craig@LucaMacPro' with board [1,0,-1,0,1,0,0,0,0] and player move 9.
+-- server: Placing an X into position 9.
+-- server: Received [computer_turn] request from node 'Craig@LucaMacPro' with board [1,
+                                                                                     0,
+                                                                                     -1,
+                                                                                     0,
+                                                                                     1,
+                                                                                     0,
+                                                                                     0,
+                                                                                     0,
+                                                                                     -1].
+-- server: Placing an O into position 6.
+-- server: Sending [player_turn] message to node 'Craig@LucaMacPro'.
+-- server: Received [process_player_turn] request from node 'Craig@LucaMacPro' with board [1,0,-1,0,1,1,0,0,-1] and player move 4.
+-- server: Placing an X into position 4.
+-- server: Received [computer_turn] request from node 'Craig@LucaMacPro' with board [1,
+                                                                                     0,
+                                                                                     -1,
+                                                                                     -1,
+                                                                                     1,
+                                                                                     1,
+                                                                                     0,
+                                                                                     0,
+                                                                                     -1].
+-- server: Placing an O into position 8.
+-- server: Sending [player_turn] message to node 'Craig@LucaMacPro'.
+-- server: Received [process_player_turn] request from node 'Craig@LucaMacPro' with board [1,0,-1,-1,1,1,0,1,-1] and player move 2.
+-- server: Placing an X into position 2.
+-- server: Received [computer_turn] request from node 'Craig@LucaMacPro' with board [1,
+                                                                                     -1,
+                                                                                     -1,
+                                                                                     -1,
+                                                                                     1,
+                                                                                     1,
+                                                                                     0,
+                                                                                     1,
+                                                                                     -1].
+-- server: Placing an O into position 7.
+-- server: Sending [computer_tie] message to node 'Craig@LucaMacPro'.
