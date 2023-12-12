@@ -120,7 +120,6 @@ serverLoop() ->
             io:fwrite("~sFound node in the local process dictionary: [~w].~n", [?id, ClientLocNode]),
             {gameClient, FromNode} ! {node(), "[debug] You CAN go that way."},
             % Tell the ClientLocId on ClientLocNode that a gameClient on FromNode is entering.
-
             {ClientLocId, ClientLocNode} ! {node(), enter, FromNode, ClientState}
          end, % if
          serverLoop();

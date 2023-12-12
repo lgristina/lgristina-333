@@ -179,7 +179,7 @@ server(ServerNode) ->
    end. % if
 
 
-go([_Space | Destination], ServerNode, State = #state{visitedLocations = Visited}) ->
+go([_Space | Destination], ServerNode, State = #state{visitedLocations = Visited, codeProgress = CodeProgress}) ->
     % Get the location module for the destination.
     LocationName = list_to_atom(Destination),
     DestAtom = getLocationModule(Destination),
@@ -187,17 +187,24 @@ go([_Space | Destination], ServerNode, State = #state{visitedLocations = Visited
 
     case LocationName of
         '2025' ->
+            % Add the location to the list of visited locations for other destinations.
             FirstVisit = not lists:member('2025', Visited),
-            NewVisitedLocations = Visited ++ ['2025'],
-            NewState = State#state{visitedLocations = NewVisitedLocations, currentLocation = LocationName},
-            case FirstVisit of
-                true -> 
-                  % First visit to 2025.
-                  io:fwrite("~s[debug] First visit to 2025. DestAtom: ~s~p~n", [?id, DestAtom, NewState]),
-                  {gameServer, ServerNode} ! {node(), startLoc1, DestAtom, NewState};
-                false ->
-                  % Subsequent visits to 2025.
-                  {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, NewState}
+            if(FirstVisit) ->
+               NewVisitedLocations = Visited ++ ['2025'],
+               NewState = State#state{visitedLocations = NewVisitedLocations, currentLocation = '2025'},
+               {gameServer, ServerNode} ! {node(), startLoc1, DestAtom, NewState};
+            ?else ->
+               NewState = State#state{currentLocation = '2025'},
+               {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, NewState}
+            end;
+         'codeRoom' ->
+            IsComplete = lists:member("_", CodeProgress),
+            io:fwrite("~s[debug] IsComplete: ~w~n", [?id, IsComplete]),
+            case IsComplete of
+               true ->
+                  {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, State};
+               false ->
+                  {"You cannot go here yet. Keep looking for code fragments.", State}
             end;
          _ -> 
             % Add the location to the list of visited locations for other destinations.
@@ -207,7 +214,8 @@ go([_Space | Destination], ServerNode, State = #state{visitedLocations = Visited
                NewState = State#state{visitedLocations = NewVisitedLocations, currentLocation = LocationName},
                {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, NewState};
             ?else ->
-               {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, State}
+               NewState = State#state{currentLocation = LocationName},
+               {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, NewState}
             end
     end;
 go([], _ServerNode, _State) ->
@@ -250,12 +258,13 @@ getLocationModule(Year) ->
    % Get the location module based on the year.
    %io:fwrite("~s[debug] Year: [~w] and is a string?: [~w].~n", [?id, Year, is_list(Year)]),
    case list_to_atom(Year) of
-      '1975' -> loc6;
-      '1985' -> loc5;
-      '1995' -> loc4;
-      '2005' -> loc3;
-      '2015' -> loc2;
-      '2025' -> loc1;
+      'codeRoom' -> loc7;
+      '1975'     -> loc6;
+      '1985'     -> loc5;
+      '1995'     -> loc4;
+      '2005'     -> loc3;
+      '2015'     -> loc2;
+      '2025'     -> loc1;
 
       % -- Otherwise...
       _ -> {error, "Invalid Location"}
