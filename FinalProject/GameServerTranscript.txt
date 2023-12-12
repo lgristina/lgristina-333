@@ -1,0 +1,66 @@
+(Server@LucaMacPro)22> gameServer:start().
+-- game server: Starting Distributed Adventure Game Server (pid <0.193.0>) on node 'Server@LucaMacPro'.
+-- game server: Spawned game server with pid <0.195.0>, registered as gameServer.
+-- game server: Received registerNewLocation message from node '2025@LucaMacPro' for loc1.
+-- game server: Putting {loc1,'2025@LucaMacPro'} in the local process dictionary.
+-- game server: We are now monitoring '2025@LucaMacPro'.
+-- game server: Received registerNewLocation message from node '2015@LucaMacPro' for loc2.
+-- game server: Putting {loc2,'2015@LucaMacPro'} in the local process dictionary.
+-- game server: We are now monitoring '2015@LucaMacPro'.
+-- game server: Received registerNewLocation message from node '2005@LucaMacPro' for loc3.
+-- game server: Putting {loc3,'2005@LucaMacPro'} in the local process dictionary.
+-- game server: We are now monitoring '2005@LucaMacPro'.
+-- game server: Received registerNewLocation message from node '1995@LucaMacPro' for loc4.
+-- game server: Putting {loc4,'1995@LucaMacPro'} in the local process dictionary.
+-- game server: We are now monitoring '1995@LucaMacPro'.
+-- game server: Received registerNewLocation message from node '1985@LucaMacPro' for loc5.
+-- game server: Putting {loc5,'1985@LucaMacPro'} in the local process dictionary.
+-- game server: We are now monitoring '1985@LucaMacPro'.
+-- game server: Received registerNewLocation message from node '1975@LucaMacPro' for loc6.
+-- game server: Putting {loc6,'1975@LucaMacPro'} in the local process dictionary.
+-- game server: We are now monitoring '1975@LucaMacPro'.
+-- game server: Received registerNewLocation message from node 'CodeRoom@LucaMacPro' for locCodeRoom.
+-- game server: Putting {locCodeRoom,'CodeRoom@LucaMacPro'} in the local process dictionary.
+-- game server: We are now monitoring 'CodeRoom@LucaMacPro'.
+-- game server: Received startGame message from node 'Client@LucaMacPro' for location [loc1].
+-- game server: Getting node for location [loc1] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['2025@LucaMacPro'].
+-- game server: Received searchLocation message from node 'Client@LucaMacPro' for location [loc1].
+-- game server: Getting node for location [loc1] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['2025@LucaMacPro'].
+-- game server: Received goToLocation message from node 'Client@LucaMacPro' for location [loc3].
+-- game server: Getting node for location [loc3] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['2005@LucaMacPro'].
+-- game server: Received searchLocation message from node 'Client@LucaMacPro' for location [loc3].
+-- game server: Getting node for location [loc3] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['2005@LucaMacPro'].
+-- game server: Received goToLocation message from node 'Client@LucaMacPro' for location [loc5].
+-- game server: Getting node for location [loc5] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['1985@LucaMacPro'].
+-- game server: Received searchLocation message from node 'Client@LucaMacPro' for location [loc5].
+-- game server: Getting node for location [loc5] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['1985@LucaMacPro'].
+-- game server: Received goToLocation message from node 'Client@LucaMacPro' for location [loc1].
+-- game server: Getting node for location [loc1] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['2025@LucaMacPro'].
+-- game server: Received goToLocation message from node 'Client@LucaMacPro' for location [loc6].
+-- game server: Getting node for location [loc6] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['1975@LucaMacPro'].
+-- game server: Received searchLocation message from node 'Client@LucaMacPro' for location [loc6].
+-- game server: Getting node for location [loc6] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['1975@LucaMacPro'].
+-- game server: Received goToLocation message from node 'Client@LucaMacPro' for location [loc4].
+-- game server: Getting node for location [loc4] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['1995@LucaMacPro'].
+-- game server: Received searchLocation message from node 'Client@LucaMacPro' for location [loc4].
+-- game server: Getting node for location [loc4] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['1995@LucaMacPro'].
+-- game server: Received goToLocation message from node 'Client@LucaMacPro' for location [loc2].
+-- game server: Getting node for location [loc2] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['2015@LucaMacPro'].
+-- game server: Received searchLocation message from node 'Client@LucaMacPro' for location [loc2].
+-- game server: Getting node for location [loc2] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['2015@LucaMacPro'].
+-- game server: Received goToLocation message from node 'Client@LucaMacPro' for location [loc1].
+-- game server: Getting node for location [loc1] from the local process dictionary.
+-- game server: Found node in the local process dictionary: ['2025@LucaMacPro'].

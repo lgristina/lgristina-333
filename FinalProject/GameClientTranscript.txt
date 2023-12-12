@@ -1,0 +1,176 @@
+(Client@LucaMacPro)32> c(gameClient).
+{ok,gameClient}
+(Client@LucaMacPro)33> gameClient:start('Server@LucaMacPro').
+-- game client: Starting Distributed Adventure Game Client (pid <0.207.0>) on node 'Client@LucaMacPro'.
+-- game client: Spawned game client with pid <0.254.0>, registered as gameClient.
+Welcome to Time Travelers. Enter "go 2025" to start playing.
+-- game client: Monitoring game server on node 'Server@LucaMacPro'.
+-- game client: [play] Enter action or help -] go 2025
+-- game client: [debug] This is the location and destatom: ['2025'], [loc1].
+-- game client: {'Client@LucaMacPro',startLoc1,loc1,
+                                     {state,'2025',"______",['2025']}}
+-- game client: Received message ["[debug] Let the game begin."] from node 'Server@LucaMacPro'.
+-- game client: Received game start from node '2025@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'2025',[95,95,95,95,95,95],['2025']}
+-- game client: [play] Enter action or help -] search 2025
+-- game client: [debug] This is the location: ['2025'].
+-- game client: [debug] LocationData: [[97]], Choices: [['1975','2005']], LetterLookup: [1] .
+Updated Code: a_____
+Updated Code: a_____
+-- game client: [debug] DestAtom: loc1{state,'2025',
+                                       ["a",95,95,95,95,95],
+                                       ['2025']}
+-- game client: {'Client@LucaMacPro',searchLocation,loc1,
+                    {state,'2025',["a",95,95,95,95,95],['2025']}}
+-- game client: Received message ["[debug] Let the search begin."] from node 'Server@LucaMacPro'.
+-- game client: Received search narrative from node '2025@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'2025',[[97],95,95,95,95,95],['2025']}
+-- game client: [play] Enter action or help -] go 2005
+-- game client: [debug] This is the location and destatom: ['2005'], [loc3].
+-- game client: {'Client@LucaMacPro',goToLocation,loc3,
+                    {state,'2005',["a",95,95,95,95,95],['2025','2005']}}
+-- game client: Received message ["[debug] You CAN go that way."] from node 'Server@LucaMacPro'.
+-- game client: Received location description from node '2005@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'2005',[[97],95,95,95,95,95],['2025','2005']}
+-- game client: [play] Enter action or help -] search 2005
+-- game client: [debug] This is the location: ['2005'].
+-- game client: [debug] LocationData: [[112]], Choices: [['1985']], LetterLookup: [3] .
+Updated Code: a_p___
+Updated Code: a_p___
+-- game client: [debug] DestAtom: loc3{state,'2005',
+                                       ["a",95,"p",95,95,95],
+                                       ['2025','2005']}
+-- game client: {'Client@LucaMacPro',searchLocation,loc3,
+                    {state,'2005',["a",95,"p",95,95,95],['2025','2005']}}
+-- game client: Received message ["[debug] Let the search begin."] from node 'Server@LucaMacPro'.
+-- game client: Received search narrative from node '2005@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'2005',[[97],95,[112],95,95,95],['2025','2005']}
+-- game client: [play] Enter action or help -] go 1985
+-- game client: [debug] This is the location and destatom: ['1985'], [loc5].
+-- game client: {'Client@LucaMacPro',goToLocation,loc5,
+                    {state,'1985',
+                        ["a",95,"p",95,95,95],
+                        ['2025','2005','1985']}}
+-- game client: Received message ["[debug] You CAN go that way."] from node 'Server@LucaMacPro'.
+-- game client: Received location description from node '1985@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'1985',[[97],95,[112],95,95,95],['2025','2005','1985']}
+-- game client: [play] Enter action or help -] search 1985
+-- game client: [debug] This is the location: ['1985'].
+-- game client: [debug] LocationData: [[99]], Choices: [['2025']], LetterLookup: [5] .
+Updated Code: a_p_c_
+Updated Code: a_p_c_
+-- game client: [debug] DestAtom: loc5{state,'1985',
+                                       ["a",95,"p",95,"c",95],
+                                       ['2025','2005','1985']}
+-- game client: {'Client@LucaMacPro',searchLocation,loc5,
+                    {state,'1985',
+                        ["a",95,"p",95,"c",95],
+                        ['2025','2005','1985']}}
+-- game client: Received message ["[debug] Let the search begin."] from node 'Server@LucaMacPro'.
+-- game client: Received search narrative from node '1985@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'1985',[[97],95,[112],95,[99],95],['2025','2005','1985']}
+-- game client: [play] Enter action or help -] go 2025
+-- game client: [debug] This is the location and destatom: ['2025'], [loc1].
+-- game client: {'Client@LucaMacPro',goToLocation,loc1,
+                    {state,'2025',
+                        ["a",95,"p",95,"c",95],
+                        ['2025','2005','1985']}}
+-- game client: Received message ["[debug] You CAN go that way."] from node 'Server@LucaMacPro'.
+-- game client: Received location description from node '2025@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'2025',[[97],95,[112],95,[99],95],['2025','2005','1985']}
+-- game client: [play] Enter action or help -] go 1975
+-- game client: [debug] This is the location and destatom: ['1975'], [loc6].
+-- game client: {'Client@LucaMacPro',goToLocation,loc6,
+                    {state,'1975',
+                        ["a",95,"p",95,"c",95],
+                        ['2025','2005','1985','1975']}}
+-- game client: Received message ["[debug] You CAN go that way."] from node 'Server@LucaMacPro'.
+-- game client: Received location description from node '1975@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'1975',[[97],95,[112],95,[99],95],['2025','2005','1985','1975']}
+-- game client: [play] Enter action or help -] search 1975
+-- game client: [debug] This is the location: ['1975'].
+-- game client: [debug] LocationData: [[97]], Choices: [['1995']], LetterLookup: [6] .
+Updated Code: a_p_ca
+Updated Code: a_p_ca
+-- game client: [debug] DestAtom: loc6{state,'1975',
+                                       ["a",95,"p",95,"c","a"],
+                                       ['2025','2005','1985','1975']}
+-- game client: {'Client@LucaMacPro',searchLocation,loc6,
+                    {state,'1975',
+                        ["a",95,"p",95,"c","a"],
+                        ['2025','2005','1985','1975']}}
+-- game client: Received message ["[debug] Let the search begin."] from node 'Server@LucaMacPro'.
+-- game client: Received search narrative from node '1975@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'1975',[[97],95,[112],95,[99],[97]],['2025','2005','1985','1975']}
+-- game client: [play] Enter action or help -] go 1995
+-- game client: [debug] This is the location and destatom: ['1995'], [loc4].
+-- game client: {'Client@LucaMacPro',goToLocation,loc4,
+                    {state,'1995',
+                        ["a",95,"p",95,"c","a"],
+                        ['2025','2005','1985','1975','1995']}}
+-- game client: Received message ["[debug] You CAN go that way."] from node 'Server@LucaMacPro'.
+-- game client: Received location description from node '1995@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'1995',[[97],95,[112],95,[99],[97]],['2025','2005','1985','1975','1995']}
+-- game client: [play] Enter action or help -] search 1995
+-- game client: [debug] This is the location: ['1995'].
+-- game client: [debug] LocationData: [[97]], Choices: [['2015']], LetterLookup: [4] .
+Updated Code: a_paca
+Updated Code: a_paca
+-- game client: [debug] DestAtom: loc4{state,'1995',
+                                       ["a",95,"p","a","c","a"],
+                                       ['2025','2005','1985','1975','1995']}
+-- game client: {'Client@LucaMacPro',searchLocation,loc4,
+                    {state,'1995',
+                        ["a",95,"p","a","c","a"],
+                        ['2025','2005','1985','1975','1995']}}
+-- game client: Received message ["[debug] Let the search begin."] from node 'Server@LucaMacPro'.
+-- game client: Received search narrative from node '1995@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'1995',[[97],95,[112],[97],[99],[97]],['2025','2005','1985','1975','1995']}
+-- game client: [play] Enter action or help -] go 2015
+-- game client: [debug] This is the location and destatom: ['2015'], [loc2].
+-- game client: {'Client@LucaMacPro',goToLocation,loc2,
+                    {state,'2015',
+                        ["a",95,"p","a","c","a"],
+                        ['2025','2005','1985','1975','1995','2015']}}
+-- game client: Received message ["[debug] You CAN go that way."] from node 'Server@LucaMacPro'.
+-- game client: Received location description from node '2015@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'2015',[[97],95,[112],[97],[99],[97]],['2025','2005','1985','1975','1995','2015']}
+-- game client: [play] Enter action or help -] search 2015
+-- game client: [debug] This is the location: ['2015'].
+-- game client: [debug] LocationData: [[108]], Choices: [['2025']], LetterLookup: [2] .
+Updated Code: alpaca
+Updated Code: alpaca
+-- game client: [debug] DestAtom: loc2{state,'2015',
+                                       ["a","l","p","a","c","a"],
+                                       ['2025','2005','1985','1975','1995',
+                                        '2015']}
+-- game client: {'Client@LucaMacPro',searchLocation,loc2,
+                    {state,'2015',
+                        ["a","l","p","a","c","a"],
+                        ['2025','2005','1985','1975','1995','2015']}}
+-- game client: Received message ["[debug] Let the search begin."] from node 'Server@LucaMacPro'.
+-- game client: Received search narrative from node '2015@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'2015',[[97],[108],[112],[97],[99],[97]],['2025','2005','1985','1975','1995','2015']}
+-- game client: [play] Enter action or help -] go 2025
+-- game client: [debug] This is the location and destatom: ['2025'], [loc1].
+-- game client: {'Client@LucaMacPro',goToLocation,loc1,
+                    {state,'2025',
+                        ["a","l","p","a","c","a"],
+                        ['2025','2005','1985','1975','1995','2015']}}
+-- game client: Received message ["[debug] You CAN go that way."] from node 'Server@LucaMacPro'.
+-- game client: Received location description from node '2025@LucaMacPro'.
+-- game client: ok
+-- game client: {state,'2025',[[97],[108],[112],[97],[99],[97]],['2025','2005','1985','1975','1995','2015']}

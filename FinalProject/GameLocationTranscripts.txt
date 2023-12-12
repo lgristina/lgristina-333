@@ -1,0 +1,57 @@
+Loc1:
+
+(2025@LucaMacPro)18> loc1:start('Server@LucaMacPro').
+-- location 1: Starting Location 1 (pid <0.91.0>) on node '2025@LucaMacPro'.
+-- location 1: Spawned location with pid <0.177.0>, registered as loc1.
+-- location 1: Notifying server on node 'Server@LucaMacPro'.
+-- location 1: Monitoring game server on node 'Server@LucaMacPro'.
+ok
+-- location 1: A gameClient on 'Client@LucaMacPro' is entering loc1.
+(1) Welcome. The year is 2025 (present). You have been selected to go on a mission to secure a code lost in time 
+(1) The rules for time travel are as follows: 
+(1)   1. You can travel forward or backward 20 years at a time depending on your location in time.
+(1)   2. Only in the present can you make a 50 year time jump to the past to head down the other path.
+(1)   3. As you travel, you must find the person that holds a part of the code.
+(1)   4. If you collect all of the code, you can head to the code room.
+-- location 1: A gameClient on 'Client@LucaMacPro' is searching loc1.
+You go look for the person with the code fragment... 
+The person who holds the code tells you that it is 'a' 
+-- location 1: A gameClient on 'Client@LucaMacPro' is entering loc1.
+(1) Welcome back! You need to head down another path to continue looking for the code. 
+(1) Or if you have collected all of the code, you can head to the code room [codeRoom]. 
+-- location 1: A gameClient on 'Client@LucaMacPro' is entering loc1.
+(1) Welcome back! You need to head down another path to continue looking for the code. 
+(1) Or if you have collected all of the code, you can head to the code room [codeRoom]. 
+(2025@LucaMacPro)19> 
+
+
+Loc2-6: All of these are exactly the same except for the labels and node names
+
+(2015@LucaMacPro)18> loc2:start('Server@LucaMacPro').
+-- location 2: Starting Location 2 (pid <0.91.0>) on node '2015@LucaMacPro'.
+-- location 2: Spawned location with pid <0.179.0>, registered as loc2.
+-- location 2: Notifying server on node 'Server@LucaMacPro'.
+-- location 2: Monitoring game server on node 'Server@LucaMacPro'.
+ok
+-- location 2: A gameClient on 'Client@LucaMacPro' is entering loc2.
+(2) You wake up disoriented in Los Angeles in 2015. You are at the last stop before you get to head back to the present 
+(2) You need to find the person with the code fragment [search 2025]. 
+(2) Or if you have collected all of the code, move on to the code room in the present [go 2025]. 
+-- location 2: A gameClient on 'Client@LucaMacPro' is searching loc2.
+(2) You go out to look for the person with the code fragment... 
+(2) You head to the park you were instructed to go to and find someone you would not have expected...
+(2) The person who holds the code tells you that it is 'l' 
+
+
+Loc7:
+
+(CodeRoom@LucaMacPro)19> loc7:start('Server@LucaMacPro').
+-- location code room: Starting Location Code Room (pid <0.91.0>) on node 'CodeRoom@LucaMacPro'.
+-- location code room: Spawned location with pid <0.190.0>, registered as locCodeRoom.
+-- location code room: Notifying server on node 'Server@LucaMacPro'.
+-- location code room: Monitoring game server on node 'Server@LucaMacPro'.
+ok
+
+(7) You have finally gathered all of the code fragments.
+(7) You walk into the code room and sit down at the computer and the screen says:
+
