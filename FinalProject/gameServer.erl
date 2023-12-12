@@ -84,6 +84,12 @@ serverLoop() ->
          erase(hd(LocIdList)),            % erase it from our process dictionary.
          serverLoop();
 
+      {FromNode, exit} ->
+         io:fwrite("~sReceived exit message from node ~w.~n",[?id, FromNode]),
+         {gameClient, FromNode} ! {node(), "Goodbye."},
+         gameServer ! {local, endProcess};
+
+
       {FromNode, goToLocation, ClientLocId} ->
          io:fwrite("~sReceived goToLocation message from node ~w for location [~w].~n",[?id, FromNode, ClientLocId]),
          % Look up the ClientLocId in our local process dictionary
@@ -114,11 +120,12 @@ serverLoop() ->
             io:fwrite("~sFound node in the local process dictionary: [~w].~n", [?id, ClientLocNode]),
             {gameClient, FromNode} ! {node(), "[debug] You CAN go that way."},
             % Tell the ClientLocId on ClientLocNode that a gameClient on FromNode is entering.
+
             {ClientLocId, ClientLocNode} ! {node(), enter, FromNode, ClientState}
          end, % if
          serverLoop();
 
-      {FromNode, searchLocation, ClientLocId} ->
+      {FromNode, searchLocation, ClientLocId, ClientState} ->
          io:fwrite("~sReceived searchLocation message from node ~w for location [~w].~n",[?id, FromNode, ClientLocId]),
          % Look up the ClientLocId in our local process dictionary
          io:fwrite("~sGetting node for location [~w] from the local process dictionary.~n", [?id, ClientLocId]),
@@ -131,11 +138,11 @@ serverLoop() ->
             io:fwrite("~sFound node in the local process dictionary: [~w].~n", [?id, ClientLocNode]),
             {gameClient, FromNode} ! {node(), "[debug] Let the search begin."},
             % Tell the ClientLocId on ClientLocNode that a gameClient on FromNode is searching.
-            {ClientLocId, ClientLocNode} ! {node(), search, FromNode}
+            {ClientLocId, ClientLocNode} ! {node(), search, FromNode, ClientState}
          end, % if
          serverLoop();
 
-      {FromNode, startLoc1, ClientLocId}  ->
+      {FromNode, startLoc1, ClientLocId, ClientState}  ->
          io:fwrite("~sReceived startGame message from node ~w for location [~w].~n",[?id, FromNode, ClientLocId]),
          % Look up the ClientLocId in our local process dictionary
          io:fwrite("~sGetting node for location [~w] from the local process dictionary.~n", [?id, ClientLocId]),
@@ -148,7 +155,7 @@ serverLoop() ->
             io:fwrite("~sFound node in the local process dictionary: [~w].~n", [?id, ClientLocNode]),
             {gameClient, FromNode} ! {node(), "[debug] Let the game begin."},
             % Tell the ClientLocId on ClientLocNode that a gameClient on FromNode is searching.
-            {ClientLocId, ClientLocNode} ! {node(), startGame, FromNode}
+            {ClientLocId, ClientLocNode} ! {node(), startGame, FromNode, ClientState}
          end, % if
          serverLoop();
 

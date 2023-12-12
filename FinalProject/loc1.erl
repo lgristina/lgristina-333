@@ -60,19 +60,19 @@ locationLoop() ->
          % ...  and shut down.
          exit(normal);
 
-      {_FromNode, startGame, GameClientNode}  ->
+      {_FromNode, startGame, GameClientNode, GameClientState}  ->
          io:fwrite("~sA gameClient on ~w is entering loc1.~n",[?id, GameClientNode]),
-         {gameClient, GameClientNode} ! {node(), gameDescription()},
+         {gameClient, GameClientNode} ! {node(), gameStart, gameDescription(), GameClientState},
          locationLoop();
 
-      {_FromNode, enter, GameClientNode}  ->
+      {_FromNode, enter, GameClientNode, GameClientState}  ->
          io:fwrite("~sA gameClient on ~w is entering loc1.~n",[?id, GameClientNode]),
-         {gameClient, GameClientNode} ! {node(), describe()},
+         {gameClient, GameClientNode} ! {node(), getDescribe, describe(), GameClientState},
          locationLoop();
 
-      {_FromNode, search, GameClientNode}  ->
+      {_FromNode, search, GameClientNode, GameClientState}  ->
          io:fwrite("~sA gameClient on ~w is searching loc1.~n",[?id, GameClientNode]),
-         {gameClient, GameClientNode} ! {node(), narrative()},
+         {gameClient, GameClientNode} ! {node(), searchNarrative, narrative(), GameClientState},
          locationLoop();
 
       {FromNode, _Any}  ->
@@ -94,9 +94,9 @@ narrative() ->
    io:fwrite("The person who holds the code tells you that it is 'a' ~n", []).
 
 gameDescription() ->
-   io:fwrite("(1) Welcome. The year is 2025. ~n  
-              (1) You have been selected to go on a mission to secure a code lost in time ~n", []),
+   io:fwrite("(1) Welcome. The year is 2025 (present). You have been selected to go on a mission to secure a code lost in time ~n", []),
    io:fwrite("(1) The rules for time travel are as follows: ~n", []),
-   io:fwrite("(1)   1. You can travel forward or backward 20 years at a time.~n", []),
-   io:fwrite("(1)   2. Only in the present can you make a 50 year time jump to the past.~n", []),
-   io:fwrite("(1)   3. As you travel, you must find the person that holds the a part of the code.~n", []).
+   io:fwrite("(1)   1. You can travel forward or backward 20 years at a time depending on your location in time.~n", []),
+   io:fwrite("(1)   2. Only in the present can you make a 50 year time jump to the past to head down the other path.~n", []),
+   io:fwrite("(1)   3. As you travel, you must find the person that holds a part of the code.~n", []),
+   io:fwrite("(1)   4. If you collect all of the code, you can head to the code room.~n", []).

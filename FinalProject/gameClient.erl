@@ -62,7 +62,29 @@ clientLoop() ->
          io:fwrite("~sServer node ~w has left our cluster and is no longer reachable. Shutting down.~n",[?id, Node]),
          % ...  and shut down.
          % TODO: exit the playLoop too.
+
          exit(normal);
+
+      {FromNode, gameStart, GameDescription, GameState} ->
+         io:fwrite("~sReceived game start from node ~w.~n",[?id, FromNode]),
+         io:fwrite("~s~s~n", [?id, GameDescription]),
+         io:fwrite("~s~w~n", [?id, GameState]),
+         
+         clientLoop();
+
+      {FromNode, getDescribe, LocationDescription, GameState} ->
+         io:fwrite("~sReceived location description from node ~w.~n",[?id, FromNode]),
+         io:fwrite("~s~s~n", [?id, LocationDescription]),
+         io:fwrite("~s~w~n", [?id, GameState]),
+         
+         clientLoop();
+
+      {FromNode, searchNarrative, SearchNarrative, GameState} ->
+         io:fwrite("~sReceived search narrative from node ~w.~n",[?id, FromNode]),
+         io:fwrite("~s~s~n", [?id, SearchNarrative]),
+         io:fwrite("~s~w~n", [?id, GameState]),
+         
+         clientLoop();
 
       {FromNode, _Any}  ->
          io:fwrite("~sReceived message [~p] from node ~w.~n",[?id, _Any, FromNode]),
@@ -78,15 +100,28 @@ playLoop(ServerNode, State) ->
    % -- Get a line of input from the user.
    Line = io:get_line(io_lib:format("~s[play] Enter action or help -] ", [?id])),  % Line is returned as a string.
    {ResultAtom, ResultText} = processCommand(Line, ServerNode, State),
+
+   case ResultAtom of
+      go ->
+         ResultTextSize = tuple_size(ResultText),
+         ResultState = element(ResultTextSize, ResultText);
+      search -> 
+         ResultTextSize = tuple_size(ResultText),
+         ResultState = element(ResultTextSize, ResultText);
+      _ ->
+         ResultState = State
+   end,
+
    %
    % -- Update the display.
-   io:fwrite("~s~s~n", [?id, ResultText]),
+   io:fwrite("~s~p~n", [?id, ResultText]),
    %
    % -- Quit or Recurse/Loop.
    if (ResultAtom == quit) ->
-      io:fwrite("~sThank you for playing.~n", [?id]);
+      io:fwrite("~sThank you for playing.~n", [?id]),
+      {gameServer, ServerNode} ! {node(), exit};
    ?else ->
-     playLoop(ServerNode, State)  % This is tail recursion, so it's really a jump to the top of playLoop.
+     playLoop(ServerNode, ResultState)  % This is tail recursion, so it's really a jump to the top of playLoop.
    end. % if
 
 
@@ -139,50 +174,59 @@ go([_Space | Destination], ServerNode, State = #state{visitedLocations = Visited
         '2025' ->
             FirstVisit = not lists:member('2025', Visited),
             NewVisitedLocations = Visited ++ ['2025'],
-            NewState = State#state{visitedLocations = NewVisitedLocations},
+            NewState = State#state{visitedLocations = NewVisitedLocations, currentLocation = LocationName},
             case FirstVisit of
                 true -> 
                   % First visit to 2025.
-                  {gameServer, ServerNode} ! {node(), startLoc1, DestAtom};
+                  io:fwrite("~s[debug] First visit to 2025. DestAtom: ~s~p~n", [?id, DestAtom, NewState]),
+                  {gameServer, ServerNode} ! {node(), startLoc1, DestAtom, NewState};
                 false ->
                   % Subsequent visits to 2025.
                   {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, NewState}
             end;
         _ -> 
             % Add the location to the list of visited locations for other destinations.
-            NewVisitedLocations = Visited ++ [LocationName],
-            NewState = State#state{visitedLocations = NewVisitedLocations},
-            {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, NewState}
-    end,
-
-    ok;
+            FirstVisit = not lists:member(LocationName, Visited),
+            if(FirstVisit) ->
+               NewVisitedLocations = Visited ++ [LocationName],
+               NewState = State#state{visitedLocations = NewVisitedLocations, currentLocation = LocationName},
+               {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, NewState};
+            ?else ->
+               {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, State}
+            end
+    end;
 go([], _ServerNode, _State) ->
-    io_lib:format("Where do you want to go?", []).
+    io_lib:format("Where do you want to go: [~w]?", [#state.visitedLocations]).
 
  
 % ----------
 % Additions
 % ----------
 
-search(CurrentLocation, ServerNode, State = #state{codeProgress = CodeProgress}) ->
+search([_Space | Destination], ServerNode, State = #state{codeProgress = CodeProgress}) ->
+
+   % Get the location module for the destination.
+   LocationName = list_to_atom(Destination),
+   DestAtom = getLocationModule(Destination),
+   LocationModule = atom_to_list(getLocationModule(Destination)),
    
-   case updateCode(list_to_atom(CurrentLocation), CodeProgress) of
+   io:fwrite("~s[debug] This is the location: [~w].~n", [?id, LocationName]),
+   
+   case updateCode(LocationName, CodeProgress, LocationModule) of
       {ok, UpdatedCodeProgress} ->
-         io:format("Updated Code:~s~n", [UpdatedCodeProgress]),
-         % Get the next location.
-         NextLocation = getNextLocation(CurrentLocation),
+         io:format("Updated Code: ~s~n", [UpdatedCodeProgress]),
          % Update the player state.
-         NewState = State#state{
-               currentLocation = NextLocation,
-               codeProgress = UpdatedCodeProgress
-         },
-         {gameServer, ServerNode} ! {node(), searchLocation, NewState#state.currentLocation},
-         go([NextLocation], ServerNode, NewState);
+         NewState = State#state{codeProgress = UpdatedCodeProgress},
+
+         io:fwrite("~s[debug] DestAtom: ~s~p~n", [?id, DestAtom, NewState]),
+
+         {gameServer, ServerNode} ! {node(), searchLocation, DestAtom, NewState};
+         
       {error, Reason} ->
          io:fwrite("Error in updating code: ~s~n", [Reason]),
          % Decide how to handle the error. For example, you might want to retry, skip, or exit.
          % This is just a placeholder action:
-         State
+         gameClient ! {node(), enter, State}
    end.
 
    
@@ -199,71 +243,66 @@ getLocationModule(Year) ->
       '2025' -> loc1;
 
       % -- Otherwise...
-      _ -> noLoc % Needed a no op
+      _ -> {error, "Invalid Location"}
    end.
 
 getLocationData(Location) ->
    % Get the location data based on the location module.
    case Location of
-      loc1 -> "a";
-      loc2 -> "l";
-      loc3 -> "p";
-      loc4 -> "a";
-      loc5 -> "c";
-      loc6 -> "a";
+      '2025' -> "a";
+      '2015' -> "l";
+      '2005' -> "p";
+      '1995' -> "a";
+      '1985' -> "c";
+      '1975' -> "a";
 
       % -- Otherwise...
-      _ -> ""
+      _ -> {error, "Invalid Location"}
 
-   end.
-
-getNextLocation(CurrentLocation) ->
-   % Get the next location based on the current location.
-   Choices = getValidChoices(CurrentLocation),
-   io:format("You can tavel to the following locations: ~p. Enter your choice: ", [Choices]),
-   {ok, [NextLocation]} = io:fread("", "~d"),
-   case lists:member(NextLocation, Choices) of
-      true  -> 
-         NextLocation;
-      false ->
-         io:fwrite("Invalid Choice. Please Try Again.~n"), 
-         getNextLocation(CurrentLocation)
    end.
 
 getValidChoices(CurrentLocation) ->
-   case list_to_atom(CurrentLocation) of
-      1975 -> [1995];
-      1985 -> [2005];
-      1995 -> [2015];
-      2005 -> [1985];
-      2015 -> [2025];
-      2025 -> [1975, 2005];
+   case CurrentLocation of
+      '1975' -> ['1995'];
+      '1985' -> ['2025'];
+      '1995' -> ['2015'];
+      '2005' -> ['1985'];
+      '2015' -> ['2025'];
+      '2025' -> ['1975', '2005'];
 
       % -- Otherwise...
       _ -> []
    end.
 
-updateCode(CurrentLocation, CodeProgress) ->
-   LocationModule = getLocationModule(CurrentLocation),
-   Choices = getValidChoices(CurrentLocation),
-   IsValid = not lists:member(CurrentLocation, Choices),
+updateCode(CurrentLocation, CodeProgress, LocationModule) ->
+    LocationData = getLocationData(CurrentLocation),
+    Choices = getValidChoices(CurrentLocation),
+    IsValid = lists:member(CurrentLocation, Choices),
+    LetterLocation = string:split(LocationModule, "loc"),
+    LetterLookupTuple = string:to_integer(tl(LetterLocation)),
+    LetterLookup = element(1, LetterLookupTuple),
 
- case IsValid of
+    io:fwrite("~s[debug] LocationData: [~w], IsValid: [~w], Choices: [~w], LetterLookup: [~w] .~n", [?id, LocationData, IsValid, Choices, LetterLookup]),
+
+    case IsValid of
         false ->
-            io:fwrite("Invalid Location. Please Try Again.~s~n", [LocationModule]),
+            io:fwrite("Invalid Location. Please Try Again.~s~n", [CurrentLocation]),
             {error, invalid_location};
         true ->
-            case getLocationData(LocationModule) of
-                "" ->
-                    io:fwrite("Invalid Location. Cannot Retrieve Code. Please Try Again.~s~n", [LocationModule]),
+            case LocationData of
+                {error, "Invalid Location"} ->
+                    io:fwrite("Invalid Location. Cannot Retrieve Code. Please Try Again.~s~n", [CurrentLocation]),
                     {error, invalid_code_fragment};
-                CodeFragment ->
-                    case string:substr(atom_to_list(CurrentLocation), 4, 1) of
+                _ ->
+                    case LetterLocation of
                         "" ->
-                            io:fwrite("Invalid Letter Location. Please Try Again.~s~n", [LocationModule]),
+                            io:fwrite("Invalid Letter Location. Please Try Again.~s~n", [CurrentLocation]),
                             {error, invalid_letter_location};
-                        LetterLocation ->
-                            UpdatedCodeProgress = string:replace(CodeProgress, LetterLocation, CodeFragment, first),
+                        _ ->
+                            % Replace character at the specified index
+                            UpdatedCodeProgress = lists:sublist(CodeProgress, LetterLookup - 1) ++
+                                                   [LocationData] ++
+                                                   lists:sublist(CodeProgress, LetterLookup + 1, length(CodeProgress) - LetterLookup),
                             io:fwrite("Updated Code: ~s~n", [UpdatedCodeProgress]),
                             {ok, UpdatedCodeProgress}
                     end

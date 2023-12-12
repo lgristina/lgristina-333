@@ -2,7 +2,7 @@
 -author('Alan G. Labouseur').
 -author('Luca Gristina').
 -define(else, true).  % -- This is to make the if statements (somewhat) readable.
--define(id, "-- location 1: ").
+-define(id, "-- location 3: ").
 
 
 %--------
@@ -16,7 +16,7 @@ start() ->
 
 start(ServerNode) ->
    % -- Spawn this location process.
-   io:fwrite("~sStarting Location 1 (pid ~w) on node ~w.~n",[?id, self(), node()]),
+   io:fwrite("~sStarting Location 3 (pid ~w) on node ~w.~n",[?id, self(), node()]),
    LocPid = spawn(fun locationLoop/0),
    io:fwrite("~sSpawned location with pid ~w",[?id, LocPid]),
    % We want to publish this process in Erlang's process registry.
@@ -58,14 +58,14 @@ locationLoop() ->
          % ...  and shut down.
          exit(normal);
 
-      {_FromNode, enter, GameClientNode, ClientState}  ->
+      {_FromNode, enter, GameClientNode, GameClientState}  ->
          io:fwrite("~sA gameClient on ~w is entering loc3.~n",[?id, GameClientNode]),
-         {gameClient, GameClientNode} ! {node(), describe(ClientState)},
+         {gameClient, GameClientNode} ! {node(), getDescribe, describe(), GameClientState},
          locationLoop();
 
-      {_FromNode, search, GameClientNode}  ->
+      {_FromNode, search, GameClientNode, GameClientState}  ->
          io:fwrite("~sA gameClient on ~w is searching loc3.~n",[?id, GameClientNode]),
-         {gameClient, GameClientNode} ! {node(), narrative()},
+         {gameClient, GameClientNode} ! {node(), searchNarrative, narrative(), GameClientState},
          locationLoop();
 
       {FromNode, _Any}  ->
@@ -77,20 +77,13 @@ locationLoop() ->
 %--------
 % Private
 %--------
-describe(ClientState) ->
-   Visited = lists:member("2025", ClientState),
-   case Visited of
-      true ->
-         io:fwrite("(1) Welcome back! You need to head down another path to continue looking for the code. ~n", []),
-         io:fwrite("(1) Or if you have collected all of the code, you can head to the code room [codeRoom]. ~n", []);
-      false ->
-         io:fwrite("(1) Welcome. The year is 2025. ~n  
-                        You have been selected to go on a mission to secure a code lost in time ~n", []),
-         io:fwrite("(1) The rules for time travel are as follows: ~n", []),
-         io:fwrite("(1)   1. You can travel forward or backward 20 years at a time.~n", []),
-         io:fwrite("(1)   2. Only in the present can you make a 50 year time jump to the past.~n", []),
-         io:fwrite("(1)   3. As you travel, you must find the person that holds the a part of the code.~n", [])
-   end.
+describe() ->
+   io:fwrite("(3) You wake up disoriented in New Orleans in 2005. You are at the second stop before you get to head back to the present ~n", []),
+   io:fwrite("(3) You need to find the person with the code fragment! [search 2005]. ~n", []),
+   io:fwrite("(3) Or if you have already collected the code fragment, keep moving back into the past [go 1985]. ~n", []).
+
 
 narrative() ->
-   io:fwrite("The person who holds the code is: ~n", []).
+   io:fwrite("(3) You go out to look for the person with the code fragment... ~n", []),
+   io:fwrite("(3) You head into the bar you were instructed to go to and find Someone you would not have expected~n", []),
+   io:fwrite("(3) The person who holds the code tells you that it is 'p' ~n", []).
