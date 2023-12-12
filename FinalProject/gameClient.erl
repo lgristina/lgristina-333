@@ -86,6 +86,21 @@ clientLoop() ->
          
          clientLoop();
 
+      {FromNode, ServerNode, attemptCode, GameClientState} ->
+         io:fwrite("~sReceived code attempt from node ~w.~n",[?id, FromNode]),
+         io:fwrite("~s~w~n", [?id, GameClientState]),
+         
+         case attemptCode() of
+            {win, WinText} ->
+               io:fwrite("~s~s~n", [?id, WinText]),
+               playAgain(ServerNode);
+               
+            {quit, QuitText} ->
+               io:fwrite("~s~s~n", [?id, QuitText]),
+               io:fwrite("Enter \"go 2025\" to keep looking.~n", []),
+               clientLoop()
+         end;
+
       {FromNode, _Any}  ->
          io:fwrite("~sReceived message [~p] from node ~w.~n",[?id, _Any, FromNode]),
          clientLoop()
@@ -184,7 +199,7 @@ go([_Space | Destination], ServerNode, State = #state{visitedLocations = Visited
                   % Subsequent visits to 2025.
                   {gameServer, ServerNode} ! {node(), goToLocation, DestAtom, NewState}
             end;
-        _ -> 
+         _ -> 
             % Add the location to the list of visited locations for other destinations.
             FirstVisit = not lists:member(LocationName, Visited),
             if(FirstVisit) ->
@@ -208,7 +223,7 @@ search([_Space | Destination], ServerNode, State = #state{codeProgress = CodePro
    % Get the location module for the destination.
    LocationName = list_to_atom(Destination),
    DestAtom = getLocationModule(Destination),
-   LocationModule = atom_to_list(getLocationModule(Destination)),
+   LocationModule = atom_to_list(DestAtom),
    
    io:fwrite("~s[debug] This is the location: [~w].~n", [?id, LocationName]),
    
@@ -277,34 +292,50 @@ getValidChoices(CurrentLocation) ->
 updateCode(CurrentLocation, CodeProgress, LocationModule) ->
     LocationData = getLocationData(CurrentLocation),
     Choices = getValidChoices(CurrentLocation),
-    IsValid = lists:member(CurrentLocation, Choices),
     LetterLocation = string:split(LocationModule, "loc"),
     LetterLookupTuple = string:to_integer(tl(LetterLocation)),
     LetterLookup = element(1, LetterLookupTuple),
 
-    io:fwrite("~s[debug] LocationData: [~w], IsValid: [~w], Choices: [~w], LetterLookup: [~w] .~n", [?id, LocationData, IsValid, Choices, LetterLookup]),
+    io:fwrite("~s[debug] LocationData: [~w], Choices: [~w], LetterLookup: [~w] .~n", [?id, LocationData, Choices, LetterLookup]),
 
-    case IsValid of
-        false ->
-            io:fwrite("Invalid Location. Please Try Again.~s~n", [CurrentLocation]),
-            {error, invalid_location};
-        true ->
-            case LocationData of
-                {error, "Invalid Location"} ->
-                    io:fwrite("Invalid Location. Cannot Retrieve Code. Please Try Again.~s~n", [CurrentLocation]),
-                    {error, invalid_code_fragment};
-                _ ->
-                    case LetterLocation of
-                        "" ->
-                            io:fwrite("Invalid Letter Location. Please Try Again.~s~n", [CurrentLocation]),
-                            {error, invalid_letter_location};
-                        _ ->
-                            % Replace character at the specified index
-                            UpdatedCodeProgress = lists:sublist(CodeProgress, LetterLookup - 1) ++
-                                                   [LocationData] ++
-                                                   lists:sublist(CodeProgress, LetterLookup + 1, length(CodeProgress) - LetterLookup),
-                            io:fwrite("Updated Code: ~s~n", [UpdatedCodeProgress]),
-                            {ok, UpdatedCodeProgress}
-                    end
+   case LocationData of
+         {error, "Invalid Location"} ->
+            io:fwrite("Invalid Location. Cannot Retrieve Code. Please Try Again.~s~n", [CurrentLocation]),
+            {error, invalid_code_fragment};
+         _ ->
+            case LetterLocation of
+               "" ->
+                     io:fwrite("Invalid Letter Location. Please Try Again.~s~n", [CurrentLocation]),
+                     {error, invalid_letter_location};
+               _ ->
+                     % Replace character at the specified index
+                     UpdatedCodeProgress = lists:sublist(CodeProgress, LetterLookup - 1) ++
+                                          [LocationData] ++
+                                          lists:sublist(CodeProgress, LetterLookup + 1, length(CodeProgress) - LetterLookup),
+                     io:fwrite("Updated Code: ~s~n", [UpdatedCodeProgress]),
+                     {ok, UpdatedCodeProgress}
             end
-    end.
+   end.
+   
+
+attemptCode() ->
+   io:fwrite("~s[debug] Attempting code.~n", [?id]),
+   io:fwrite("Enter the code or enter anything else to go back to 2025: ", []),
+   {ok, Code} = io:fread("", "~s"),
+   io:fwrite("~s[debug] Code: ~s~n", [?id, Code]),
+
+   case Code of
+      "alpaca" -> 
+         {win, "Congratulations, you win!"};
+      _ -> 
+         {quit, "Going back to the present"}
+   end.
+
+playAgain(ServerNode) ->
+   io:fwrite("Would you like to play again? [y/n]: ", []),
+   {ok, Response} = io:fread("", "~s"),
+   io:fwrite("~s[debug] Response: ~s~n", [?id, Response]),
+   case Response of
+      "y" -> start();
+      _ -> {gameServer, ServerNode} ! {node(), exit}
+   end.

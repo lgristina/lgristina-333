@@ -62,7 +62,7 @@ locationLoop() ->
          io:fwrite("~sA gameClient on ~w is entering locCodeRoom.~n",[?id, GameClientNode]),
          {gameClient, GameClientNode} ! {node(), getDescribe, describe(), GameClientState},
 
-         {gameClient, GameClientNode} ! {node(), _FromNode, attemptCode, GameClientState},
+         {gameClient, GameClientNode} ! {node(), _FromNode ,attemptCode, GameClientState},
 
          locationLoop();
 
